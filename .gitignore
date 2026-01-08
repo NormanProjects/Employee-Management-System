@@ -1,0 +1,30 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Build
+target/
+dist/
+build/
+out/
+
+# Dependencies
+node_modules/
+
+# Sensitive
+**/application.yml
+!**/application-example.yml
+.env
+
+# Logs
+*.log
+
+
+
+
+
