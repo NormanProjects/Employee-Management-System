@@ -1,0 +1,17 @@
+# Maven
+target/
+.mvn/
+mvnw
+mvnw.cmd
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Config (sensitive!)
+src/main/resources/application.yml
+!src/main/resources/application-example.yml
+
+# Logs
+*.log
