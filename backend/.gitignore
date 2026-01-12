@@ -1,17 +1,29 @@
+# At: /employee-management-system/backend/.gitignore
+
 # Maven
 target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Maven Wrapper
 .mvn/
 mvnw
 mvnw.cmd
 
-# IntelliJ
+# IDE
 .idea/
 *.iml
-out/
-
-# Config (sensitive!)
-src/main/resources/application.yml
-!src/main/resources/application-example.yml
+*.iws
+*.ipr
 
 # Logs
 *.log
+
+# Environment
+.env
+application-local.properties
+
+# Build
+build/
+out/
