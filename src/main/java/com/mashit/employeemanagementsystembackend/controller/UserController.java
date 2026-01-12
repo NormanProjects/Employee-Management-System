@@ -37,31 +37,21 @@ public class UserController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Users> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Users user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
-    /**
-     * GET /api/users/username/{username} - Get user by username
-     */
     @GetMapping("/username/{username}")
     public ResponseEntity<Users> getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Users user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(user);
     }
 
-    /**
-     * GET /api/users/employee/{employeeId} - Get user by employee ID
-     */
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<Users> getUserByEmployeeId(@PathVariable Long employeeId) {
-        return userService.getUserByEmployeeId(employeeId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Users user = userService.getUserByEmployeeId(employeeId);
+        return ResponseEntity.ok(user);
     }
-
     /**
      * GET /api/users/enabled - Get all enabled users
      */

@@ -2,13 +2,14 @@ package com.mashit.employeemanagementsystembackend.service;
 
 import com.mashit.employeemanagementsystembackend.entity.Employee;
 import com.mashit.employeemanagementsystembackend.entity.Roles;
+import com.mashit.employeemanagementsystembackend.exception.DuplicateResourceException;
+import com.mashit.employeemanagementsystembackend.exception.ResourceNotFoundException;
 import com.mashit.employeemanagementsystembackend.repository.EmployeeRepository;
 import com.mashit.employeemanagementsystembackend.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,12 +28,14 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> getEmployeeById(Long id) {
-        return employeeRepository.findById(id);
+    public Employee getEmployeeById(Long id) {
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", id));
     }
 
-    public Optional<Employee> getEmployeeByEmail(String email) {
-        return employeeRepository.findByEmail(email);
+    public Employee getEmployeeByEmail(String email) {
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "email", email));
     }
 
     public List<Employee> getEmployeesByRole(Long roleId) {
@@ -45,19 +48,16 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(Employee employee) {
-        // Validate email uniqueness
+        // Check if email already exists
         if (employeeRepository.existsByEmail(employee.getEmail())) {
-            throw new IllegalArgumentException(
-                    "Employee with email '" + employee.getEmail() + "' already exists"
-            );
+            throw new DuplicateResourceException("Employee", "email", employee.getEmail());
         }
 
         // Verify role exists
         if (employee.getRole() != null && employee.getRole().getRoleId() != null) {
             Roles role = roleRepository.findById(employee.getRole().getRoleId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Role not found with id: " + employee.getRole().getRoleId()
-                    ));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Role", "id", employee.getRole().getRoleId()));
             employee.setRole(role);
         } else {
             throw new IllegalArgumentException("Role is required");
@@ -68,12 +68,12 @@ public class EmployeeService {
 
     public Employee updateEmployee(Long id, Employee employeeDetails) {
         Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", id));
 
         // Check email uniqueness if changed
         if (!existingEmployee.getEmail().equals(employeeDetails.getEmail())) {
             if (employeeRepository.existsByEmail(employeeDetails.getEmail())) {
-                throw new IllegalArgumentException("Email already in use");
+                throw new DuplicateResourceException("Employee", "email", employeeDetails.getEmail());
             }
         }
 
@@ -85,7 +85,8 @@ public class EmployeeService {
         // Update role if provided
         if (employeeDetails.getRole() != null && employeeDetails.getRole().getRoleId() != null) {
             Roles role = roleRepository.findById(employeeDetails.getRole().getRoleId())
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Role", "id", employeeDetails.getRole().getRoleId()));
             existingEmployee.setRole(role);
         }
 
@@ -94,7 +95,7 @@ public class EmployeeService {
 
     public void deleteEmployee(Long id) {
         if (!employeeRepository.existsById(id)) {
-            throw new RuntimeException("Employee not found with id: " + id);
+            throw new ResourceNotFoundException("Employee", "id", id);
         }
         employeeRepository.deleteById(id);
     }
