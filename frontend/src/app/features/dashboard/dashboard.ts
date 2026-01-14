@@ -10,7 +10,7 @@ import { LoginResponse } from '../../shared/models/auth.model';
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './dashboard.html',
+  templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.css'
 })
 export class DashboardComponent implements OnInit {
