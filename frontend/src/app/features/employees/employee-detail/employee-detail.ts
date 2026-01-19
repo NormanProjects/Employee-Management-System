@@ -9,8 +9,8 @@ import { Employee } from '../../../shared/models/employee.model';
   selector: 'app-employee-detail',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './employee-detail.component.html',
-  styleUrl: './employee-detail.component.css'
+  templateUrl: './employee-detail.html',
+  styleUrl: './employee-detail.css'
 })
 export class EmployeeDetailComponent implements OnInit {
   employee: Employee | null = null;

@@ -10,8 +10,8 @@ import { Employee } from '../../../shared/models/employee.model';
   selector: 'app-employee-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './employee-list.component.html',
-  styleUrl: './employee-list.component.css'
+  templateUrl: './employee-list.html',
+  styleUrl: './employee-list.css'
 })
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];

@@ -11,8 +11,8 @@ import { CreateEmployeeRequest } from '../../../shared/models/employee.model';
   selector: 'app-employee-create',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './employee-create.component.html',
-  styleUrl: './employee-create.component.css'
+  templateUrl: './employee-create.html',
+  styleUrl: './employee-create.css'
 })
 export class EmployeeCreateComponent implements OnInit {
   employeeForm: FormGroup;
@@ -27,7 +27,6 @@ export class EmployeeCreateComponent implements OnInit {
     private roleService: RoleService,
     private router: Router
   ) {
-    // Initialize form with validators
     this.employeeForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
@@ -45,12 +44,11 @@ export class EmployeeCreateComponent implements OnInit {
     this.loadRoles();
   }
 
-  /**
-   * Load all roles for dropdown
-   */
   loadRoles(): void {
+    console.log('Loading roles...');
     this.roleService.getAllRoles().subscribe({
       next: (data) => {
+        console.log('Roles loaded:', data);
         this.roles = data;
       },
       error: (error) => {
@@ -60,47 +58,77 @@ export class EmployeeCreateComponent implements OnInit {
     });
   }
 
-  /**
-   * Handle form submission
-   */
   onSubmit(): void {
-    // Clear messages
     this.errorMessage = '';
     this.successMessage = '';
 
-    // Validate form
     if (this.employeeForm.invalid) {
       this.markFormGroupTouched(this.employeeForm);
+      console.log('Form is invalid');
       return;
     }
 
     this.isLoading = true;
 
-    // Prepare request
+    const formValue = this.employeeForm.value;
+    
+    // Log the raw form values
+    console.log('Raw form values:', formValue);
+    console.log('RoleId value:', formValue.roleId);
+    console.log('RoleId type:', typeof formValue.roleId);
+
+    // Manually construct the request to ensure proper types
     const request: CreateEmployeeRequest = {
-      ...this.employeeForm.value,
-      roleId: Number(this.employeeForm.value.roleId)
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      roleId: Number(formValue.roleId)
     };
 
-    // Call service
+    // Add optional fields only if they have values
+    if (formValue.phoneNumber) {
+      request.phoneNumber = formValue.phoneNumber;
+    }
+    if (formValue.department) {
+      request.department = formValue.department;
+    }
+    if (formValue.position) {
+      request.position = formValue.position;
+    }
+    if (formValue.hireDate) {
+      request.hireDate = formValue.hireDate;
+    }
+    if (formValue.salary) {
+      request.salary = Number(formValue.salary);
+    }
+
+    // Log the request being sent
+    console.log('Request being sent:', request);
+    console.log('Request roleId:', request.roleId);
+    console.log('Request roleId type:', typeof request.roleId);
+    console.log('JSON stringified:', JSON.stringify(request));
+
     this.employeeService.createEmployee(request).subscribe({
       next: (response) => {
+        console.log('Success response:', response);
         this.successMessage = 'Employee created successfully!';
         this.isLoading = false;
         
-        // Redirect to employee list after 1.5 seconds
         setTimeout(() => {
           this.router.navigate(['/employees']);
         }, 1500);
       },
       error: (error) => {
         console.error('Error creating employee:', error);
+        console.error('Error details:', error.error);
         this.isLoading = false;
         
         if (error.status === 409) {
           this.errorMessage = 'An employee with this email already exists.';
         } else if (error.status === 400) {
           this.errorMessage = 'Invalid data. Please check all fields.';
+        } else if (error.status === 500) {
+          this.errorMessage = 'Server error. Please check all required fields are filled.';
         } else {
           this.errorMessage = 'Failed to create employee. Please try again.';
         }
@@ -108,9 +136,6 @@ export class EmployeeCreateComponent implements OnInit {
     });
   }
 
-  /**
-   * Mark all form fields as touched to show validation errors
-   */
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
@@ -118,17 +143,11 @@ export class EmployeeCreateComponent implements OnInit {
     });
   }
 
-  /**
-   * Check if field has error
-   */
   hasError(fieldName: string, errorType: string): boolean {
     const field = this.employeeForm.get(fieldName);
     return !!(field?.hasError(errorType) && field?.touched);
   }
 
-  /**
-   * Get error message for field
-   */
   getErrorMessage(fieldName: string): string {
     const field = this.employeeForm.get(fieldName);
     
@@ -152,18 +171,15 @@ export class EmployeeCreateComponent implements OnInit {
     return '';
   }
 
-  /**
-   * Capitalize first letter
-   */
   private capitalize(str: string): string {
-    // Convert camelCase to separate words
     const words = str.replace(/([A-Z])/g, ' $1').toLowerCase();
     return words.charAt(0).toUpperCase() + words.slice(1);
   }
 
-  /**
-   * Cancel and go back
-   */
+  goBack(): void {
+    this.router.navigate(['/employees']);
+  }
+
   cancel(): void {
     if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
       this.router.navigate(['/employees']);

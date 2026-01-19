@@ -11,8 +11,8 @@ import { UpdateEmployeeRequest } from '../../../shared/models/employee.model';
   selector: 'app-employee-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './employee-edit.component.html',
-  styleUrl: './employee-edit.component.css'
+  templateUrl: './employee-edit.html',
+  styleUrl: './employee-edit.css'
 })
 export class EmployeeEditComponent implements OnInit {
   employeeForm: FormGroup;

@@ -11,60 +11,78 @@ import { EmployeeEditComponent } from './features/employees/employee-edit/employ
 import { EmployeeDetailComponent } from './features/employees/employee-detail/employee-detail';
 import { LeaveRequestCreateComponent } from './features/leave-requests/leave-request-create/leave-request-create';
 import { LeaveRequestListComponent } from './features/leave-requests/leave-request-list/leave-request-list';
+import { RegisterComponent } from './features/auth/Register/register';
+import { UserListComponent } from './features/users/user-list/user-list.component';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
-     // Public routes
+  // Public routes
   {
     path: 'login',
     component: LoginComponent
   },
-     // Protected routes
+  {
+    path: 'register',  
+    component: RegisterComponent
+  },
+  // Protected routes
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [authGuard]  
+    // canActivate: [authGuard]  
   },
-     // Employee routes (ADMIN & MANAGER only)s
+  // Employee routes (ADMIN & MANAGER only)
   {
-    path:'employees',
+    path: 'employees',
     component: EmployeeListComponent,
-    canActivate: [authGuard, roleGuard],
     data: { roles: ['Admin', 'Manager'] }
   },
-  {
-  path: 'employees/:id',
-  component: EmployeeDetailComponent,
-  canActivate: [authGuard, roleGuard],
-  data: { roles: ['ADMIN', 'MANAGER'] }
-  },
+ 
   {
     path: 'employees/create',
     component: EmployeeCreateComponent,
-    canActivate: [authGuard, roleGuard],
+    // canActivate: [authGuard, roleGuard],
     data: { roles: ['Admin', 'Manager'] }
   },
   {
     path: 'employees/edit/:id',
     component: EmployeeEditComponent,
-    canActivate: [authGuard, roleGuard],
+    // canActivate: [authGuard, roleGuard],
     data: { roles: ['ADMIN', 'MANAGER'] }
   },
-     // Leave Request routes (All authenticated users)
+  
+  {
+    path: 'employees/:id',
+    component: EmployeeDetailComponent,
+    // canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'MANAGER'] }
+  },
+  // Leave Request routes (All authenticated users)
   {
     path: 'leave-requests',
     component: LeaveRequestListComponent,
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   },
   {
     path: 'leave-requests/create',
     component: LeaveRequestCreateComponent,
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
+  },
+  { 
+    path: 'users', 
+    component: UserListComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'profile', 
+    component: ProfileComponent, 
+    canActivate: [authGuard] 
   },
   {
     path: 'unauthorized',
     component: UnauthorizedComponent
   },
-     // Default routes
+  // Default routes
   {
     path: '',
     redirectTo: 'login',

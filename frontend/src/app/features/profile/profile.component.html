@@ -1,0 +1,125 @@
+<div class="leave-request-list-container">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="back-button" (click)="goBack()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Dashboard
+        </button>
+        <h1>My Profile</h1>
+      </div>
+      <button class="logout-btn" (click)="logout()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="page-content">
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading profile...</p>
+    </div>
+
+    <!-- Profile Content -->
+    <div *ngIf="!loading" class="profile-grid">
+      <!-- User Info Card -->
+      <div class="card">
+        <h2>Personal Information</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Username</label>
+            <p>{{ currentUser?.username }}</p>
+          </div>
+          <div class="info-item">
+            <label>Role</label>
+            <p><span class="badge">{{ currentUser?.roleName }}</span></p>
+          </div>
+          <div class="info-item">
+            <label>First Name</label>
+            <p>{{ employee?.firstName }}</p>
+          </div>
+          <div class="info-item">
+            <label>Last Name</label>
+            <p>{{ employee?.lastName }}</p>
+          </div>
+          <div class="info-item">
+            <label>Email</label>
+            <p>{{ employee?.email }}</p>
+          </div>
+          <div class="info-item">
+            <label>Employee ID</label>
+            <p>{{ employee?.employeeId }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Password Card -->
+      <div class="card">
+        <h2>Change Password</h2>
+        
+        <div *ngIf="successMessage" class="success-message">
+          {{ successMessage }}
+        </div>
+        
+        <div *ngIf="error" class="error-message">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ error }}
+        </div>
+
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input 
+              type="password" 
+              id="currentPassword"
+              formControlName="currentPassword"
+              placeholder="Enter current password">
+          </div>
+
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input 
+              type="password" 
+              id="newPassword"
+              formControlName="newPassword"
+              placeholder="Enter new password">
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm New Password</label>
+            <input 
+              type="password" 
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Confirm new password">
+            <span class="error-text" *ngIf="passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched">
+              Passwords do not match
+            </span>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn-submit"
+            [disabled]="passwordForm.invalid || changingPassword">
+            {{ changingPassword ? 'Changing...' : 'Change Password' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>

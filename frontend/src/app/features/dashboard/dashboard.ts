@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+
 import { AuthService } from '../../core/services/auth.service';
 import { EmployeeService } from '../../shared/services/employee';
 import { LeaveRequestService } from '../../shared/services/leave-request';
@@ -14,15 +15,16 @@ import { LoginResponse } from '../../shared/models/auth.model';
   styleUrl: './dashboard.css'
 })
 export class DashboardComponent implements OnInit {
+
   currentUser: LoginResponse | null = null;
+  greeting = '';
+  isLoading = true;
+
   stats = {
     totalEmployees: 0,
     pendingLeaveRequests: 0,
-    activeUsers: 0,
     departments: 0
   };
-  isLoading = true;
-  greeting = '';
 
   constructor(
     private authService: AuthService,
@@ -37,8 +39,13 @@ export class DashboardComponent implements OnInit {
     this.loadStats();
   }
 
-  setGreeting(): void {
+  /* ----------------------------
+   * Dashboard Logic
+   * ---------------------------- */
+
+  private setGreeting(): void {
     const hour = new Date().getHours();
+
     if (hour < 12) {
       this.greeting = 'Good Morning';
     } else if (hour < 18) {
@@ -48,29 +55,38 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  loadStats(): void {
+  private loadStats(): void {
     this.isLoading = true;
 
-    if (this.hasRole(['ADMIN', 'MANAGER'])) {
-      this.employeeService.getAllEmployees().subscribe({
-        next: (employees) => {
-          this.stats.totalEmployees = employees.length;
-          const departments = new Set(employees.map(e => e.department).filter(d => d));
-          this.stats.departments = departments.size;
-        },
-        error: (error) => console.error('Error loading employees:', error)
-      });
-
-      this.leaveRequestService.getPendingLeaveRequests().subscribe({
-        next: (requests) => {
-          this.stats.pendingLeaveRequests = requests.length;
-        },
-        error: (error) => console.error('Error loading leave requests:', error)
-      });
+    if (!this.hasRole(['ADMIN', 'MANAGER'])) {
+      this.isLoading = false;
+      return;
     }
 
-    this.isLoading = false;
+    this.employeeService.getAllEmployees().subscribe({
+      next: (employees) => {
+        this.stats.totalEmployees = employees.length;
+
+        const departments = new Set(
+          employees.map(e => e.department).filter(Boolean)
+        );
+        this.stats.departments = departments.size;
+      },
+      error: (error) => console.error('Error loading employees:', error)
+    });
+
+    this.leaveRequestService.getPendingLeaveRequests().subscribe({
+      next: (requests) => {
+        this.stats.pendingLeaveRequests = requests.length;
+      },
+      error: (error) => console.error('Error loading leave requests:', error),
+      complete: () => (this.isLoading = false)
+    });
   }
+
+  /* ----------------------------
+   * Role & Navigation Helpers
+   * ---------------------------- */
 
   hasRole(roles: string[]): boolean {
     return this.authService.hasAnyRole(roles);
@@ -82,6 +98,10 @@ export class DashboardComponent implements OnInit {
 
   goToLeaveRequests(): void {
     this.router.navigate(['/leave-requests']);
+  }
+
+  goToUsers(): void {
+    this.router.navigate(['/users']);
   }
 
   goToProfile(): void {

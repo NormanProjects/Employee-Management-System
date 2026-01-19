@@ -10,8 +10,8 @@ import { LeaveRequest, LeaveStatus } from '../../../shared/models/leave-request.
   selector: 'app-leave-request-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './leave-request-list.component.html',
-  styleUrl: './leave-request-list.component.css'
+  templateUrl: './leave-request-list.html',
+  styleUrl: './leave-request-list.css'
 })
 export class LeaveRequestListComponent implements OnInit {
   leaveRequests: LeaveRequest[] = [];

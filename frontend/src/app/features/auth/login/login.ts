@@ -82,6 +82,13 @@ export class LoginComponent {
   }
 
   /**
+   * Navigate to register page
+   */
+  navigateToRegister(): void {
+    this.router.navigate(['/register']);
+  }
+
+  /**
    * Mark all form fields as touched to show validation errors
    */
   private markFormGroupTouched(formGroup: FormGroup): void {

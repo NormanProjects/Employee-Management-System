@@ -6,8 +6,5 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html'
- 
 })
-export class AppComponent {
-  title = 'employee-management-frontend';
-}
+export class AppComponent {}

@@ -10,8 +10,8 @@ import { LeaveType, CreateLeaveRequestRequest } from '../../../shared/models/lea
   selector: 'app-leave-request-create',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './leave-request-create.component.html',
-  styleUrl: './leave-request-create.component.css'
+  templateUrl: './leave-request-create.html',
+  styleUrl: './leave-request-create.css'
 })
 export class LeaveRequestCreateComponent implements OnInit {
   leaveForm: FormGroup;
