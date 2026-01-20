@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,6 +34,21 @@ public class Employee {
     @Email(message = "Email should be valid")
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
+
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
+
+    @Column(name = "department", length = 100)
+    private String department;
+
+    @Column(name = "position", length = 100)
+    private String position;
+
+    @Column(name = "hire_date")
+    private LocalDate hireDate;
+
+    @Column(name = "salary")
+    private Double salary;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)

@@ -21,4 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.enabled = true")
     List<User> findAllActiveUsers();
+
+    @Query("SELECT u FROM User u WHERE u.employee.email = :email")
+    Optional<User> findByEmployeeEmail(@Param("email") String email);
+
 }
