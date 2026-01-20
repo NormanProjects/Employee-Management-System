@@ -77,12 +77,14 @@ export class EmployeeCreateComponent implements OnInit {
     console.log('RoleId value:', formValue.roleId);
     console.log('RoleId type:', typeof formValue.roleId);
 
-    // Manually construct the request to ensure proper types
-    const request: CreateEmployeeRequest = {
+    // Manually construct the request to match backend expectations
+    const request: any = {
       firstName: formValue.firstName,
       lastName: formValue.lastName,
       email: formValue.email,
-      roleId: Number(formValue.roleId)
+      role: {
+        roleId: Number(formValue.roleId)
+      }
     };
 
     // Add optional fields only if they have values

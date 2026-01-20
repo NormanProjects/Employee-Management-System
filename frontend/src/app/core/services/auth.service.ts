@@ -53,20 +53,35 @@ export class AuthService {
   }
 
   /* ----------------------------
+   * Password Reset
+   * ---------------------------- */
+
+  forgotPassword(email: string): Observable<any> { // Fixed typo: was 'orgotPassword'
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  validateResetToken(token: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/validate-reset-token?token=${token}`);
+  }
+
+  resetPassword(data: { token: string; newPassword: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
+  }
+
+  /* ----------------------------
    * Authentication State
    * ---------------------------- */
 
   isAuthenticated(): boolean {
-  const token = this.getToken();
-  const user = this.currentUserSubject.value;
+    const token = this.getToken();
+    const user = this.currentUserSubject.value;
 
-  if (!token || !user) {
-    return false;
+    if (!token || !user) {
+      return false;
+    }
+
+    return true;
   }
-
-
-  return true;
-}
 
   /* ----------------------------
    * Role Helpers

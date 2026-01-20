@@ -1,19 +1,19 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './features/auth/login/login';
-import { DashboardComponent } from './features/dashboard/dashboard';
-import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized';
-import { EmployeeListComponent } from './features/employees/employee-list/employee-list';
-import { authGuard } from './core/guards/auth-guard';
-import { Component } from '@angular/core';
-import { roleGuard } from './core/guards/role-guard';
-import { EmployeeCreateComponent } from './features/employees/employee-create/employee-create';
-import { EmployeeEditComponent } from './features/employees/employee-edit/employee-edit';
-import { EmployeeDetailComponent } from './features/employees/employee-detail/employee-detail';
-import { LeaveRequestCreateComponent } from './features/leave-requests/leave-request-create/leave-request-create';
-import { LeaveRequestListComponent } from './features/leave-requests/leave-request-list/leave-request-list';
-import { RegisterComponent } from './features/auth/Register/register';
-import { UserListComponent } from './features/users/user-list/user-list.component';
-import { ProfileComponent } from './features/profile/profile.component';
+import { LoginComponent } from '../features/auth/login/login';
+import { DashboardComponent } from '../features/dashboard/dashboard';
+import { UnauthorizedComponent } from '../shared/components/unauthorized/unauthorized';
+import { EmployeeListComponent } from '../features/employees/employee-list/employee-list';
+import { authGuard } from '../core/guards/auth-guard';
+import { EmployeeCreateComponent } from '../features/employees/employee-create/employee-create';
+import { EmployeeEditComponent } from '../features/employees/employee-edit/employee-edit';
+import { EmployeeDetailComponent } from '../features/employees/employee-detail/employee-detail';
+import { LeaveRequestCreateComponent } from '../features/leave-requests/leave-request-create/leave-request-create';
+import { LeaveRequestListComponent } from '../features/leave-requests/leave-request-list/leave-request-list';
+import { RegisterComponent } from '../features/auth/Register/register';
+import { UserListComponent } from '../features/users/user-list/user-list.component';
+import { ProfileComponent } from '../features/profile/profile.component';
+import { ForgotPasswordComponent } from '../features/auth/forgot-password/forgot-password'; 
+
 
 export const routes: Routes = [
   // Public routes
@@ -72,6 +72,10 @@ export const routes: Routes = [
     path: 'users', 
     component: UserListComponent, 
     canActivate: [authGuard] 
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
   },
   { 
     path: 'profile', 
